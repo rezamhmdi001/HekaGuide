@@ -1,0 +1,6 @@
+{
+  "name": "اطلس مهندسی مدرن",
+  "description": "راهنمای جامع، تعاملی و فارسی مهندسی نرم‌افزار مدرن — از سخت‌افزار، لینوکس و شبکه تا وب، معماری سیستم، DevOps و هوش مصنوعی.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

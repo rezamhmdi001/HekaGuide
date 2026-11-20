@@ -1,0 +1,270 @@
+You are a Distinguished Systems Architect, Full-Stack & AI Engineer, Technical Historian, and Ultra-Minimalist UI Designer.
+Build a complete, mobile-first, ultra-minimalist, Netlify-ready interactive Persian engineering handbook and field manual designed to be deployed publicly and shared among ambitious developers and builders.
+
+Title: **«اطلس مهندسی مدرن» (The Modern Engineering Atlas — From Bare Metal & Web to AI Systems)**
+
+=====================================================================
+1. EDITORIAL VOICE, AUDIENCE & PEDAGOGICAL PHILOSOPHY
+=====================================================================
+- **Language & Typography Hygiene:**
+  - The ENTIRE UI, storytelling, historical narratives, explanations, callouts, diagrams labels, glossary, and interactive challenges MUST be written in fluent, razor-sharp, engaging **Persian (`dir="rtl"`)**.
+  - Every English technical term, CLI command, code block, HTTP header, file path, RFC, algorithm name, and API payload MUST stay in **English** strictly isolated in `dir="ltr"` monospace inline chips (`<code>`) or code blocks so Persian/English bidirectional text (`bidi`) NEVER scrambles punctuation or order.
+- **Target Reader & Tone:**
+  - Written for sharp, curious, self-driven builders (including readers with ADHD who thrive on high-signal momentum, storytelling, and clear mental models) who want to move from "making things work" to **deep senior-level engineering intuition**.
+  - **NEVER patronize or dilute:** Zero fluff, zero textbook boredom, zero "what is a computer" filler. Explain complex systems deeply from **first principles**, making hard concepts feel vivid, intuitive, and thrilling.
+- **Storytelling + History + Real Engineering Depth:**
+  - Every Track and Chapter MUST open with **why this exists** — real computing history, pivotal crises, famous engineering decisions, and the human stories behind the tools (Bell Labs 1969, ARPANET, the C10K crisis, Linus Torvalds' 10-day Git sprint, Brendan Eich's 10-day JavaScript creation, the 2017 "Attention Is All You Need" paper, Heartbleed, SQLite on a Navy destroyer, etc.).
+  - Every concept MUST be **deeply interconnected** across domains via clickable cross-links ("پیوندهای مفهومی") showing how OS threads relate to Node/Python Event Loops, how TCP/TLS connects to Frontend TTFB & Cloudflare 525/526, how Git DAGs mirror Docker layers, and how GPU memory & KV-Cache connect OS memory architecture to LLM latency.
+- **Cognitive Ergonomics (Scannable yet Deep):**
+  - Clean visual rhythm: short focused paragraphs, crisp visual diagrams, highlighted rules of thumb, collapsible **"عمیق‌تر شویم؟ (Deep Dive)"** drawers for hardcore internals/math/edge cases, and a subtle reading-progress bar at the top.
+
+=====================================================================
+2. ULTRA-MINIMALIST MOBILE-FIRST DESIGN SYSTEM
+=====================================================================
+- **Visual Direction:** Editorial high-craft minimalism inspired by technical monographs, Stripe Docs, and Linear.
+  - **Default Theme — Crisp Paper Light:** Warm paper canvas (`#FAF9F6`), pure white surface cards (`#FFFFFF`), deep charcoal text (`#18181B`), muted neutral secondary ink (`#52525B`), razor-thin hairline borders (`1px solid #E4E4E7`), and ONE restrained editorial accent (`#B45309` warm amber-rust or `#1D4ED8` cobalt blue — pick one and use it strictly for active states, progress, and links).
+  - **Reader Modes:** Clean 3-mode toggle (`کاغذی روشن` / `سپیا` / `شب آرام`) + Font size control (`A-` / `A+`) + Focus Mode (hides chrome while reading), all saved in `localStorage`.
+  - **Zero Generic AI Bloat:** NO purple/neon gradients, NO heavy shadows, NO cluttered glassmorphism, NO distracting animations. Pure typographic hierarchy, strict grid alignment, and generous whitespace.
+- **Fonts:**
+  - Persian UI & body: `Vazirmatn` (Google Fonts), generous `line-height: 1.9` for effortless mobile reading.
+  - Code, commands, metadata, chapter codes (`D02 · T06 · C03`): `JetBrains Mono`.
+  - Strictly use logical RTL spacing (`ps-`, `pe-`, `ms-`, `me-`, `text-start`).
+- **Mobile-First Navigation & Shareability:**
+  - Designed first for 390px smartphones (thumb-friendly >= 44px targets), scaling cleanly to a desktop 3-pane/2-pane editorial reading view with collapsible hierarchical TOC (`Domain -> Track -> Chapter`).
+  - **Sticky Mobile Bottom Bar (4 crisp tabs):**
+    1. `اطلس` (Home: 5 Major Domains, 20 Tracks, and Curated Study Paths for friends with different goals)
+    2. `مطالعه` (Instant resume of last-read chapter)
+    3. `جستجو` (Fast fuzzy search across Persian titles, English technical terms, CLI commands, error codes, and glossary)
+    4. `پیشرفت` (Mastery ring per Domain, completed chapters, bookmarks, personal notes, weak recall cards, Export/Import JSON progress)
+  - **Friend-Friendly Sharing Features:**
+    - Every chapter has a unique clean URL route (using HashRouter or Netlify SPA routing with `_redirects`) and a 1-tap **"اشتراک‌گذاری فصل" (Copy Link)** button with a subtle toast confirmation.
+    - **Curated Study Tracks on Home Page** so friends can filter by goal:
+      - `مسیر کامل معمار سیستم` (All 5 Domains)
+      - `مسیر مهندس وب فول‌استک` (Domains 2 + 3 + selected Networking/Git)
+      - `مسیر سرور، امنیت و DevOps` (Domains 1 + 4 + selected DB/Nginx)
+      - `مسیر مهندس هوش مصنوعی و ایجنت‌ها` (Domain 5 + Backend APIs + Architecture)
+    - **Built-in Technical Glossary Drawer (`واژه‌نامه`):** Tapping key technical terms or opening the glossary lets readers look up concise Persian explanations of acronyms (`TLS`, `ACID`, `CORS`, `RAG`, `AST`, `WAL`, `CSRF`, `KV-Cache`, etc.) without leaving the page.
+
+=====================================================================
+3. GRAND HIERARCHICAL CURRICULUM: 5 DOMAINS · 20 TRACKS · 120 CHAPTERS
+=====================================================================
+Implement the COMPLETE 3-level hierarchy: **5 Domains (بخش‌ها) -> 20 Tracks (زیرمجموعه‌ها) -> 120 Chapters (فصل‌ها)**.
+
+**CRITICAL ANTI-STUB ARCHITECTURE RULE:**
+- Separate each Track into its own modular TypeScript file (`src/data/tracks/t01.ts` through `src/data/tracks/t20.ts`) and lazy-load tracks dynamically so initial bundle size stays tiny and blazing fast on mobile.
+- NEVER write "Coming soon" or empty placeholders. Every single one of the 120 chapters MUST have real, accurate, substantive Persian content (origin story, mental model, real code/CLI snippet, production failure war story, deep dive, cross-links, and an interactive field check).
+
+---------------------------------------------------------------------
+DOMAIN 1 (بخش ۱): ماشین، سیستم‌عامل، شبکه و رمزنگاری (Foundations & Infra)
+---------------------------------------------------------------------
+### Track 01 — فلسفه Unix، تاریخچه محاسبات و آناتومی کرنل
+- T01-C01: آزمایشگاه بل ۱۹۶۹: تولد Unix، کن تامپسون و دنیس ریچی، و فلسفه «همه‌چیز یک فایل است»
+- T01-C02: از ترانزیستور تا CPU: رجیسترها، کش L1/L2/L3، چرخه دستورالعمل و چرا Memory Locality سرعت را ۱۰۰ برابر می‌کند
+- T01-C03: کرنل در برابر User Space: Interruptها، System Callها و هزینه واقعی Context Switch
+- T01-C04: آناتومی Process و Thread: از `fork()` و `exec()` تا PID 1، Orphan/Zombie و سیگنال‌های `SIGTERM`/`SIGKILL`
+- T01-C05: حافظه مجازی (Virtual Memory)، Page Cache، Swap و OOM Killer در لینوکس
+- T01-C06: فایل‌سیستم لینوکس، `inode`، File Descriptorها و مجازی‌سازی (Hypervisor در برابر Bare Metal و VPS)
+
+### Track 02 — لینوکس میدانی، Shell و مدیریت سرویس‌ها
+- T02-C01: تاریخچه Shell از Bourne تا Bash و Zsh — و تفاوت ساختاری PowerShell ویندوز با Bash (تله‌های Quoting و `$`)
+- T02-C02: جریان‌های استاندارد (`stdin/stdout/stderr`)، Pipeها، Exit Codeها و هنر ترکیب ابزارهای کوچک
+- T02-C03: مدل مجوزهای Unix (`chmod`, `chown`, `umask`): چرا `0600` برای اسرار حیاتی و `777` یک فاجعه است
+- T02-C04: کاربران، گروه‌ها، `sudoers` و امتیازات پنهان (چرا عضویت در گروه `docker` معادل `root` است)
+- T02-C05: جراحی متن و لاگ در ترمینال: کاربرد واقعی `grep`, `awk`, `sed`, `cut`, `find`, `xargs` و `jq`
+- T02-C06: مدیریت سرویس‌ها با `systemd`، نوشتن Unit File تمیز، خواندن `journalctl` و زمان‌بندی با `cron` و Timers
+
+### Track 03 — شبکه از صفر پکت‌ها تا اینترنت مدرن
+- T03-C01: از ARPANET تا مدل TCP/IP: انقلاب Packet Switching و لایه‌های انتقال داده از کابل تا اپلیکیشن
+- T03-C02: IPv4، Subnetting/CIDR، NAT، IPv6 و تله کلاسیک `127.0.0.1` در برابر `0.0.0.0`
+- T03-C03: کالبدشکافی TCP در برابر UDP: داستان 3-Way Handshake، کنترل ازدحام (Cubic vs BBR)، MTU و MSS Clamping
+- T03-C04: Socketها، پورت‌ها و مانیتورینگ زنده با `ss`, `tcpdump`, `mtr` و `curl -v`
+- T03-C05: داستان DNS: از فایل `HOSTS.TXT` استنفورد تا سلسله‌مراتب جهانی، رکوردها، TTL، Anycast و DoH/DoT
+- T03-C06: تکامل HTTP: از HTTP/1.1 و Head-of-Line Blocking تا HTTP/2 Multiplexing و HTTP/3 (QUIC)
+
+### Track 04 — رمزنگاری کاربردی، TLS 1.3، CDN و لبه شبکه
+- T04-C01: تاریخچه رمزنگاری از انیگما تا Diffie-Hellman و RSA: رمزنگاری متقارن (`AES-GCM`) در برابر نامتقارن (`Ed25519`)
+- T04-C02: توابع درهم‌ساز (`SHA-256`)، HMAC، امضای دیجیتال و رمزنگاری پسورد (`Argon2` / `bcrypt`)
+- T04-C03: زیر کاپوت TLS 1.3 Handshake، زنجیره اعتماد (CA / PKI) و انقلاب Let's Encrypt
+- T04-C04: SNI و ALPN: چطور ده‌ها دامنه و پروتکل مختلف روی یک IP و یک پورت `443` هم‌زیستی می‌کنند
+- T04-C05: معماری CDN، Reverse Edge و Cloudflare: تفاوت SSL Flexible/Full/Strict و کالبدشکافی خطاهای `520-526`
+- T04-C06: پروکسی‌ها (HTTP/SOCKS5)، تونلینگ، تفاوت TUN و System Proxy و ریشه‌یابی نشت DNS و IPv6
+
+---------------------------------------------------------------------
+DOMAIN 2 (بخش ۲): مهندسی وب و توسعه اپلیکیشن مدرن (Modern Web Engineering)
+---------------------------------------------------------------------
+### Track 05 — آناتومی مرورگر، DOM، CSS مدرن و طراحی رابط کاربری
+- T05-C01: داستان تولد وب در CERN (تیم برنرز-لی ۱۹۸۹) و چرخه حیات یک صفحه در مرورگر (Parse -> Style -> Layout -> Paint -> Composite)
+- T05-C02: DOM، CSSOM و Render Tree: چرا برخی تغییرات CSS باعث Reflow سنگین می‌شوند و چطور انیمیشن ۶۰ فریم بسازیم
+- T05-C03: معماری Layout مدرن در CSS: Flexbox، CSS Grid، Container Queries و طراحی واقعی Mobile-First
+- T05-C04: تایپوگرافی، RTL/LTR Bidi در وب فارسی، Logical Properties (`ps-/pe-`) و دسترس‌پذیری (a11y)
+- T05-C05: بهینه‌سازی عملکرد وب (Core Web Vitals: LCP, CLS, INP)، Lazy Loading، Code Splitting و کش مرورگر
+- T05-C06: PWA، Service Workerها، Storage مرورگر (`localStorage`, `IndexedDB`, `Cookies`) و ساخت تجربه شبه‌اپلیکیشن
+
+### Track 06 — جاوااسکریپت عمیق، TypeScript و معماری React مدرن
+- T06-C01: داستان ۱۰ روزه برندن آیک (۱۹۹۵) و موتور V8: کالبدشکافی Call Stack، Heap و Garbage Collection
+- T06-C02: قلب تپنده JS: Event Loop، Microtasks (Promises) در برابر Macrotasks و Async/Await بدون باگ
+- T06-C03: Closureها، Prototype، `this` و Immutability: مفاهیمی که کدنویس معمولی را از مهندس جدا می‌کند
+- T06-C04: چرا TypeScript صنعت وب را فتح کرد؟ Type System، Generics، Narrowing و حذف کلاس بزرگی از باگ‌های Runtime
+- T06-C05: فلسفه React: از Virtual DOM و Reconciliation تا Hooks، قوانین اثر جانبی (`useEffect`) و جلوگیری از Re-render اضافه
+- T06-C06: رندرینگ مدرن وب (CSR vs SSR vs SSG vs RSC)، مدیریت State (Server State vs Client State) و ابزارهای Build مثل Vite
+
+### Track 07 — مهندسی Backend، طراحی API و هم‌روندی
+- T07-C01: کالبدشکافی یک سرویس Backend (Python/FastAPI, Node, Go): از دریافت Socket تا لایه‌های Middleware، Router و Service
+- T07-C02: طراحی REST API حرفه‌ای: نام‌گذاری Resource، کدهای وضعیت HTTP واقعی، Pagination، Versioning و قرارداد خطا
+- T07-C03: فراتر از REST: ارتباطات لحظه‌ای با WebSockets، Server-Sent Events (SSE — استاندارد استریم AI)، Webhooks و gRPC
+- T07-C04: هم‌روندی (Concurrency) در برابر موازی‌سازی (Parallelism): مدل `asyncio` تک‌نخی در برابر Multi-threading و Multi-processing
+- T07-C05: اعتبارسنجی ورودی (Schema Validation مثل Pydantic/Zod)، Serializers و قانون «هیچ ورودی کلاینتی قابل اعتماد نیست»
+- T07-C06: مدیریت فایل‌ها، آپلود امن (محدودیت حجم، Magic Bytes، جلوگیری از Path Traversal) و Object Storage (S3)
+
+### Track 08 — احراز هویت، مجوزدهی و امنیت اپلیکیشن وب (Web Security)
+- T08-C01: تفاوت AuthN (کیستی؟) و AuthZ (چه اجازه‌ای داری؟) و مدل‌های دسترسی RBAC در برابر ABAC
+- T08-C02: Session Cookie در برابر JWT: ساختار دقیق JWT، تله‌های Refresh Token، Revocation و چرا نباید JWT را بی‌گدار در `localStorage` گذاشت
+- T08-C03: OAuth 2.0، OpenID Connect (ورود با گوگل/گیت‌هاب) و Passkeys (WebAuthn) به زبان ساده و دقیق
+- T08-C04: کالبدشکافی حملات سمت کلاینت: XSS (Stored/Reflected/DOM)، CSP، CSRF و هدرهای `SameSite`/`HttpOnly`
+- T08-C05: حملات سمت سرور: SQL Injection، SSRF، IDOR (دسترسی به دیتای کاربر دیگر) و CORS (چرا CORS یک ویژگی امنیتی سرور نیست!)
+- T08-C06: Rate Limiting (Token Bucket / Sliding Window)، محافظت در برابر Brute-Force، Bot Mitigation و Audit Logging امن
+
+---------------------------------------------------------------------
+DOMAIN 3 (بخش ۳): داده، معماری سیستم و مقیاس‌پذیری (Data & Architecture)
+---------------------------------------------------------------------
+### Track 09 — دیتابیس‌های رابطه‌ای، ایندکس‌ها، SQLite و PostgreSQL
+- T09-C01: داستان Edgar Codd (۱۹۷۰) و مدل رابطه‌ای: طراحی Schema تمیز، کلیدهای اصلی/خارجی و زمان درست Denormalization
+- T09-C02: تراکنش‌ها، اصول ACID و سطوح ایزولاسیون (Isolation Levels): چطور از Race Condition و Double-Spend مالی جلوگیری کنیم
+- T09-C03: زیر کاپوت Indexها (B-Tree): چرا یک کوئری بدون ایندکس سرور را می‌خواباند و خواندن `EXPLAIN ANALYZE`
+- T09-C04: داستان شگفت‌انگیز SQLite (ناو جنگی آمریکا!) و حالت WAL: چرا کپی خام دیتابیس آن را فاسد می‌کند و SQLite Backup API چیست
+- T09-C05: چه زمانی از SQLite به PostgreSQL مهاجرت کنیم؟ Connection Pooling، MVCC، JSONB و قفل‌های سطری (`SELECT FOR UPDATE`)
+- T09-C06: Migration بدون قطعی با Alembic/Prisma: الگوی Expand-and-Contract و چرا `downgrade` مخرب در پروداکشن ممنوع است
+
+### Track 10 — کشینگ، صف‌های پیام و سیستم‌های تاب‌آور
+- T10-C01: هنر Caching (Redis و In-Memory): استراتژی‌های Cache-Aside، TTL، Cache Stampede و چرا «نام‌گذاری و باطل کردن کش» سخت‌ترین کارهاست
+- T10-C02: صف‌های پیام و Workerها (Queues, Brokers, Pub/Sub): جدا کردن کارهای سنگین (ایمیل، پردازش ویدیو، استعلام) از چرخه HTTP
+- T10-C03: Idempotency Keys و Deduplication: تضمین اینکه دو بار کلیک کردن یا Retry شبکه باعث تراکنش تکراری نشود
+- T10-C04: الگوی Transactional Outbox و Durable Leases: چطور دیتابیس و سرویس خارجی (مثل درگاه یا تلگرام) را همیشه همگام نگه داریم
+- T10-C05: Timeout، Retry با Exponential Backoff + Jitter و Circuit Breaker: جلوگیری از آبشار خطا (Cascading Failure)
+- T10-C06: طراحی سیستم مالی و دفتر کل (Double-Entry Ledger): چرا هرگز نباید فقط یک ستون `balance` را آپدیت کرد
+
+### Track 11 — معماری نرم‌افزار، کد تمیز و فرهنگ تست‌نویسی
+- T11-C01: چرا کدها فاسد می‌شوند؟ Coupling، Cohesion و اصل «لایه رابط نازک، لایه سرویس ضخیم» (Thin Handlers, Thick Services)
+- T11-C02: معماری ماژولار (Modular Monolith) در برابر Microservices: چرا ۹۵٪ استارتاپ‌ها نباید سراغ میکروسرویس بروند
+- T11-C03: الگوهای طراحی که واقعاً به کار می‌آیند: Dependency Injection، Strategy، State Machine (FSM) و Adapter
+- T11-C04: هرم تست واقعی: Unit Tests، Integration Tests، Contract Tests و چرا «سبز شدن Pytest» به تنهایی مساوی آماده انتشار نیست
+- T11-C05: دیباگ علمی (Scientific Debugging): چطور به جای حدس زدن، با ایزوله‌سازی فرضیه و Binary Search ریشه باگ را پیدا کنیم
+- T11-C06: Refactoring امن روی کد زنده، مدیریت بدهی فنی (Technical Debt) و نوشتن مستندات زنده (`ADR / DECISIONS.md`)
+
+### Track 12 — سیستم‌های توزیع‌شده، Nginx و مقیاس‌پذیری
+- T12-C01: بحران C10K (۱۹۹۹) و تولد Nginx: معماری Event-Driven در برابر Thread-per-Request
+- T12-C02: Reverse Proxy، Load Balancing (Round-Robin, Least-Conn, Health Checks) و هدرهای `X-Forwarded-*`
+- T12-C03: Nginx Stream و `ssl_preread`: مسیریابی لایه ۴ بر اساس SNI بدون رمزگشایی ترافیک
+- T12-C04: گلوگاه‌های واقعی زیر بار: `worker_connections`، سقف `ulimit`، Keep-Alive و تله‌ی Reload کردن کانفیگ
+- T12-C05: مقیاس‌پذیری عمودی (Scale-Up) در برابر افقی (Scale-Out)، Stateless کردن سرویس‌ها و Sticky Sessions
+- T12-C06: قضیه CAP، Eventual Consistency و زمان در سیستم‌های توزیع‌شده (چرا ساعت سرورها با NTP دروغ می‌گویند!)
+
+---------------------------------------------------------------------
+DOMAIN 4 (بخش ۴): امنیت زیرساخت، Git، داکر و مهندسی انتشار (DevOps & SRE)
+---------------------------------------------------------------------
+### Track 13 — امنیت سرور، SSH، فایروال و مدل‌سازی تهدید
+- T13-C01: داستان تولد SSH در ۱۹۹۵: مرگ Telnet و نحوه کار احراز هویت کلید عمومی (`Ed25519`) بدون ارسال کلید خصوصی
+- T13-C02: سخت‌سازی واقعی SSH (`sshd_config.d`): بستن رمز عبور، محدود کردن Root، مدیریت `authorized_keys` و قانون Break-Glass
+- T13-C03: فایروال لینوکس (`netfilter`, `iptables`, `nftables`, `UFW`) و تله مشهور Docker که قوانین UFW را دور می‌زند
+- T13-C04: بهداشت اسرار (Secrets Hygiene): `.env` با `0600`، جلوگیری از نشت در لاگ/Trace/CLI `argv` و اسکن مخزن
+- T13-C05: چرخش کلیدها (Key Rotation)، Key Versioning و نگهداری آفلاین (Key Escrow) بدون قفل کردن دیتای خودمان
+- T13-C06: مدل‌سازی تهدید (Threat Modeling) و معماری Fail-Closed در برابر Fail-Open
+
+### Track 14 — گیت از درون، GitHub و اتوماسیون CI/CD
+- T14-C01: داستان ۱۰ روزه لینوس توروالدز (۲۰۰۵): Git به عنوان Content-Addressable Filesystem (`blob`, `tree`, `commit`)
+- T14-C02: گراف DAG، برنچ‌ها و `HEAD`: در لحظه `git commit`, `switch` و `detached HEAD` درون `.git` چه می‌گذرد
+- T14-C03: `Merge` در برابر `Rebase` و `Cherry-pick`: کی تاریخچه را خطی کنیم و قانون طلایی عدم Rebase روی برنچ مشترک
+- T14-C04: جعبه‌ابزار نجات: `git reflog`، تفاوت `reset --soft/--mixed/--hard`، `git revert` و `git bisect` برای شکار کامیت خرابکار
+- T14-C05: دیسیپلین انتشار در Git: `.gitignore`، درخت تمیز (`git status --porcelain`)، Semantic Versioning (`v0.1.0`) و Annotated Tags
+- T14-C06: جریان کار تیمی GitHub: Pull Request، Code Review سازنده، Branch Protection و ساخت پایپ‌لاین CI/CD با GitHub Actions
+
+### Track 15 — کانتینرها و Docker در محیط تولید
+- T15-C01: کانتینر ماشین مجازی نیست! داستان `chroot` (۱۹۷۹)، Linux Namespaces و `cgroups`
+- T15-C02: سیستم‌فایل لایه‌ای (OverlayFS)، کش بیلد و هنر نوشتن `Dockerfile` امن (Multi-Stage Builds و `USER 10001` غیر-root)
+- T15-C03: سپر `.dockerignore` و بازرسی لایه‌های ایمیج برای تضمین عدم نفوذ `.env`، کلیدها و دیتابیس به داخل ایمیج
+- T15-C04: شبکه‌سازی Docker (`bridge`, `host`, `none`)، پورت‌مَپینگ امن (`127.0.0.1:8000:8000`) و DNS داخلی
+- T15-C05: پایداری داده (Volumes vs Bind Mounts)، مجوزهای UID/GID و چرا `docker compose down -v` ممنوعه پروداکشن است
+- T15-C06: لاگ‌روتیشن داکر (`json-file max-size`)، محدود کردن RAM/CPU، Healthcheckها و پاک‌سازی ایمن دیسک (`prune`)
+
+### Track 16 — مهندسی انتشار، بکاپ، پایش و واکنش به بحران (SRE)
+- T16-C01: پایان عصر «فایل تکی کپی کن روی سرور»: Build Provenance، `BUILD_COMMIT` و Image Digest Parity
+- T16-C02: تفاوت `/healthz` (Liveness) و `/readyz` (Readiness): چطور بفهمیم سرویس واقعاً آماده سرویس‌دهی به مشتری است
+- T16-C03: استراتژی بکاپ ۳-۲-۱، رمزنگاری بکاپ قبل از ارسال و تمرین بازیابی (Restore Drill) با چک Parity داده‌ها
+- T16-C04: سه ستون مشاهده‌پذیری (Observability): Structured Logs، Metrics و Traces + هشداردهی هوشمند بدون Alert Fatigue
+- T16-C05: چک‌لیست انتشار صادقانه، انتشار مرحله‌ای (Limited Pilot -> Public GO)، معیارهای Stop-Sale و Rollback واقعی
+- T16-C06: مدیریت بحران در ۳ نصفه‌شب (Incident Response) و نوشتن Postmortem بدون سرزنش (Blameless Postmortem)
+
+---------------------------------------------------------------------
+DOMAIN 5 (بخش ۵): هوش مصنوعی، LLMها و مهندسی عصر AI (AI & LLM Engineering)
+---------------------------------------------------------------------
+### Track 17 — تاریخچه هوش مصنوعی: از پرسپترون تا انقلاب Transformer
+- T17-C01: از آزمون تورینگ (۱۹۵۰) و کنفرانس دارتموث تا پرسپترون و دو «زمستان بزرگ هوش مصنوعی»
+- T17-C02: شبکه‌های عصبی عمیق به زبان انسانی: وزن‌ها، Loss Function، گرادیان کاهشی و Backpropagation
+- T17-C03: چرا GPUها (CUDA) دنیای AI را ساختند؟ ضرب ماتریسی موازی و جهش AlexNet (۲۰۱۲)
+- T17-C04: مقاله تاریخ‌ساز ۲۰۱۷ («Attention Is All You Need»): چرا RNNها شکست خوردند و Transformer همه چیز را بلعید
+- T17-C05: قوانین مقیاس‌پذیری (Scaling Laws)، پیش‌آموزش (Pre-training) و ظهور قابلیت‌های نوپدید (Emergent Abilities)
+- T17-C06: هم‌ترازی (Post-training): چطور یک تکمیل‌کننده متن خام با SFT و RLHF/DPO به یک دستیار هوشمند تبدیل می‌شود
+
+### Track 18 — مدل‌های زبانی بزرگ (LLM) زیر کاپوت
+- T18-C01: Tokenization (BPE): چرا LLMها کلمه نمی‌بینند، چرا در شمردن حروف اشتباه می‌کنند و هزینه فارسی در برابر انگلیسی چیست
+- T18-C02: Embeddings و فضای برداری معنایی: چطور معنا به مختصات هندسی تبدیل می‌شود (`King - Man + Woman ≈ Queen`)
+- T18-C03: مکانیزم Self-Attention، Context Window، مشکل «گم شدن در میانه متن» و KV-Cache (چرا توکن اول کند و بعدی‌ها سریع‌اند)
+- T18-C04: نمونه‌برداری خروجی (Sampling): نقش دقیق `Temperature`، `Top-P`، `Top-K` و چرا مدل‌ها غیرقطعی (Non-deterministic) هستند
+- T18-C05: مدل‌های استدلال‌گر (Reasoning Models / Test-Time Compute): تفاوت فکر کردن قبل از پاسخ با پاسخ مستقیم
+- T18-C06: چرا LLMها توهم می‌زنند (Hallucination)؟ مرز دانش، Grounding و مهندسی اعتمادپذیری
+
+### Track 19 — مهندسی اپلیکیشن‌های AI: از Prompting تا RAG و Tool Use
+- T19-C01: از Prompt Engineering به Context Engineering: طراحی System Prompt، Few-Shot و مدیریت بودجه Context
+- T19-C02: خروجی‌های ساخت‌یافته (Structured Outputs / JSON Schema): پل امن بین دنیای احتمالی AI و کد قطعی Backend
+- T19-C03: فراخوانی ابزار (Function / Tool Calling): چطور مدل به دیتابیس، API و دنیای واقعی متصل می‌شود
+- T19-C04: معماری RAG (Retrieval-Augmented Generation): Chunking هوشمند، Vector Databases و جستجوی ترکیبی (Hybrid Search + Reranking)
+- T19-C05: حافظه در سیستم‌های AI: حافظه کوتاه‌مدت، خلاصه‌سازی، حافظه بلندمدت کاربر و جلوگیری از آلودگی Context
+- T19-C06: استریم کردن پاسخ‌ها (SSE Streaming)، کشینگ پرامپت (Prompt Caching)، مدیریت هزینه توکن و Fallback بین مدل‌ها
+
+### Track 20 — ایجنت‌ها (AI Agents)، ارزیابی، امنیت AI و مهندسی نرم‌افزار با AI
+- T20-C01: کالبدشکافی یک AI Agent واقعی: حلقه `Think -> Act -> Observe` و تفاوت Workflow قطعی با Agent خودمختار
+- T20-C02: پروتکل MCP (Model Context Protocol) و استانداردسازی اتصال ابزارها و منابع داده به مدل‌ها
+- T20-C03: ارزیابی سیستم‌های AI (Evals): چرا تست با «حس و چشم» در پروداکشن شکست می‌خورد و LLM-as-a-Judge چیست
+- T20-C04: امنیت هوش مصنوعی: حملات Prompt Injection (مستقیم و غیرمستقیم)، Jailbreak، نشت داده و Guardrails
+- T20-C05: مهندسی حرفه‌ای با ابزارهای کدنویسی AI (مثل Cursor و Claude/Gemini): تفاوت Vibe-Coding آشفته با Spec-Driven Engineering
+- T20-C06: آینده مهندس نرم‌افزار در عصر AI: چرا معماری، دیباگ، امنیت، تست و «تفکر سیستمی» ارزشمندتر از همیشه شده‌اند
+
+=====================================================================
+4. RICH, CONSISTENT CHAPTER ANATOMY (EVERY SINGLE CHAPTER)
+=====================================================================
+Each chapter renders these crisp, focused modules:
+1. **Chapter Header:** Domain badge + Track code + Chapter code (`D02 · T06 · C02`), title, sharp subtitle, reading time (`⏱ ۵ دقیقه`), difficulty pill (`مبانی عمیق` / `میدانی` / `چالشی`), Bookmark button, and 1-tap Share Link button.
+2. **ریشه و داستان (Origin Story — Why It Exists):** Engaging historical or problem-driven narrative (1–2 punchy paragraphs) explaining the exact pain or historical turning point that created this concept.
+3. **مدل ذهنی و معماری (Core Mental Model):** Crystal-clear Persian engineering breakdown paired with a lightweight visual schematic (clean monochrome/accent inline SVG diagram or structured `dir="ltr"` flow block).
+4. **زیر کاپوت و آزمایشگاه کد/ترمینال (Under the Hood & Lab):** 1–3 real, accurate code snippets, HTTP traces, SQL queries, configs, or CLI commands in `dir="ltr"` `JetBrains Mono` blocks with:
+   - One-click **Copy** button
+   - Flag-by-flag / line-by-line Persian explanation
+   - Optional **"تله رایج / تفاوت ویندوز و لینوکس"** callout where relevant.
+5. **پرونده خرابی واقعی (Production War Story):** A concrete real-world failure ("در پروداکشن چه چیزی می‌ترکد؟") structured as: `نشانه (Symptom)` -> `ریشه واقعی (Root Cause)` -> `قاعده پیشگیری (Rule)`. Always use strictly generic RFC-safe domains/IPs (`api.example.com`, `203.0.113.10`).
+6. **عمیق‌تر شویم؟ (Collapsible Deep Dive):** Smooth toggle section containing an advanced nuance, RFC detail, complexity trade-off, or edge case so the reader opts in when energy is high.
+7. **چالش میدانی کوتاه (Lightweight Interactive Check):** ONE fast, zero-bloat, genuinely thought-provoking challenge per chapter (rotating across 4 types):
+   - `triage`: Real error log/symptom -> pick the best first engineering move (with detailed feedback on why each option works or fails).
+   - `spot_bug`: Short 4–7 line config/code snippet -> click the buggy line to reveal why it fails in production.
+   - `predict`: Predict what a command/code snippet actually outputs or does before running it.
+   - `recall`: Sharp senior-level interview/architecture question with revealable model answer + self-assessment (`مسلط شدم` / `مرور مجدد`).
+8. **شبکه پیوندها (Interconnected Knowledge Graph):** 2–3 clickable chapter chips linking to related chapters in OTHER Tracks/Domains with a concise explanation of how they connect.
+9. **یادداشت شخصی (Personal Field Note):** Collapsible per-chapter notepad saved in `localStorage`.
+10. **Footer Action:** Toggle `تکمیل فصل ✓` + clean Previous / Next chapter navigation (plus Next Track transition at chapter 6).
+
+=====================================================================
+5. TECHNICAL ARCHITECTURE (VITE + REACT + TS + TAILWIND + NETLIFY)
+=====================================================================
+- **Stack:** Vite + React 18+ + TypeScript + Tailwind CSS + `lucide-react` (1.5px minimal icons). Zero backend, zero runtime API keys, zero heavy animation/3D libraries.
+- **Performance for 120 Chapters:**
+  - `src/types/atlas.ts`: Strict TypeScript interfaces for `Domain`, `TrackMeta`, `TrackContent`, `Chapter`, `CodeSnippet`, `WarStory`, `InteractiveCheck`, `CrossLink`, `GlossaryEntry`.
+  - `src/data/manifest.ts`: Lightweight metadata index for all 5 Domains, 20 Tracks, and 120 Chapter headers/tags/keywords (used for instant home view, TOC, and global search without loading full prose).
+  - `src/data/tracks/t01.ts` ... `src/data/tracks/t20.ts`: Dynamically imported (`() => import('./tracks/t01')`) on demand when a user opens a chapter, with an in-memory cache so revisiting chapters is instant.
+  - `src/data/glossary.ts`: 40+ crisp bilingual technical glossary definitions searchable and accessible from a slide-over drawer.
+- **State Persistence (`localStorage` key `engineering_atlas_v1`):**
+  - Completed chapter IDs, interactive challenge outcomes, bookmarked IDs, last-read chapter ID, personal notes, theme (`paper` | `sepia` | `dark`), font scale, and active curated path filter.
+  - Include **Export JSON / Import JSON** buttons in the Progress tab so the user and their friends can back up or transfer progress between phone and laptop.
+- **Netlify Zero-Config Deployment:**
+  - Include `netlify.toml` (build command `npm run build`, publish `dist`, SPA redirect `/* -> /index.html` status `200`) AND `public/_redirects` (`/* /index.html 200`) so sharing deep links to any chapter on Netlify ALWAYS works on refresh.
+  - Ensure `npm run build` passes cleanly with zero TypeScript or bundler errors.
+
+Build the complete, polished, production-ready application now. Double-check RTL/LTR bidi isolation, mobile thumb ergonomics, lazy-loading of all 20 track files, and Netlify SPA routing before finishing.

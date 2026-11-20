@@ -1,0 +1,437 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all (First Rule)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // -------------------------------------------------------------------------
+    // Helper Functions
+    // -------------------------------------------------------------------------
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string
+        && id.size() >= 1
+        && id.size() <= 128
+        && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidGroupId(id) {
+      return id is string
+        && id.size() >= 4
+        && id.size() <= 64
+        && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidChapterId(id) {
+      return id is string
+        && id.size() >= 7
+        && id.size() <= 16
+        && id.matches('^T[0-9]{2}-C[0-9]{2}$');
+    }
+
+    function isValidDateString(val) {
+      return val is string
+        && val.size() == 10
+        && val.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+    }
+
+    function groupExists(groupId) {
+      return exists(/databases/$(database)/documents/studyGroups/$(groupId));
+    }
+
+    function getGroup(groupId) {
+      return get(/databases/$(database)/documents/studyGroups/$(groupId)).data;
+    }
+
+    function isGroupMember(groupId) {
+      return isSignedIn()
+        && isValidGroupId(groupId)
+        && groupExists(groupId)
+        && request.auth.uid in getGroup(groupId).memberUids;
+    }
+
+    // -------------------------------------------------------------------------
+    // Schema Validators
+    // -------------------------------------------------------------------------
+    function isValidUserProfile(d) {
+      return d.keys().hasAll([
+          'uid',
+          'displayName',
+          'completedIds',
+          'bookmarkedIds',
+          'xp',
+          'streakDays',
+          'lastActiveDate',
+          'focusMinutes',
+          'activeGroupId',
+          'lastReadId',
+          'theme',
+          'fontScale',
+          'activePathId',
+          'adhdMode',
+          'checkOutcomes',
+          'notes',
+          'createdAt',
+          'updatedAt'
+        ])
+        && d.keys().hasOnly([
+          'uid',
+          'displayName',
+          'completedIds',
+          'bookmarkedIds',
+          'xp',
+          'streakDays',
+          'lastActiveDate',
+          'focusMinutes',
+          'activeGroupId',
+          'lastReadId',
+          'theme',
+          'fontScale',
+          'activePathId',
+          'adhdMode',
+          'checkOutcomes',
+          'notes',
+          'createdAt',
+          'updatedAt'
+        ])
+        && isValidId(d.uid)
+        && d.displayName is string && d.displayName.size() >= 1 && d.displayName.size() <= 60
+        && d.completedIds is list && d.completedIds.size() <= 120
+        && d.bookmarkedIds is list && d.bookmarkedIds.size() <= 120
+        && d.xp is number && d.xp >= 0 && d.xp <= 1000000
+        && d.streakDays is number && d.streakDays >= 0 && d.streakDays <= 3650
+        && isValidDateString(d.lastActiveDate)
+        && d.focusMinutes is number && d.focusMinutes >= 0 && d.focusMinutes <= 500000
+        && d.activeGroupId is string && d.activeGroupId.size() <= 64
+        && (d.activeGroupId == '' || d.activeGroupId.matches('^[a-zA-Z0-9_\\-]+$'))
+        && isValidChapterId(d.lastReadId)
+        && d.theme is string && d.theme in ['paper', 'sepia', 'dark']
+        && d.fontScale is number && d.fontScale >= 0.85 && d.fontScale <= 1.3
+        && d.activePathId is string && d.activePathId in ['architect', 'fullstack', 'devops', 'ai']
+        && d.adhdMode is bool
+        && d.checkOutcomes is map && d.checkOutcomes.size() <= 120
+        && d.notes is map && d.notes.size() <= 120
+        && d.createdAt is timestamp
+        && d.updatedAt is timestamp;
+    }
+
+    function isValidStudyGroup(d) {
+      return d.keys().hasAll([
+          'id',
+          'name',
+          'description',
+          'ownerId',
+          'weeklyGoalChapters',
+          'memberUids',
+          'createdAt',
+          'updatedAt'
+        ])
+        && d.keys().hasOnly([
+          'id',
+          'name',
+          'description',
+          'ownerId',
+          'weeklyGoalChapters',
+          'memberUids',
+          'createdAt',
+          'updatedAt'
+        ])
+        && isValidGroupId(d.id)
+        && d.name is string && d.name.size() >= 2 && d.name.size() <= 60
+        && d.description is string && d.description.size() <= 240
+        && isValidId(d.ownerId)
+        && d.weeklyGoalChapters is number && d.weeklyGoalChapters >= 1 && d.weeklyGoalChapters <= 120
+        && d.memberUids is list && d.memberUids.size() >= 1 && d.memberUids.size() <= 25
+        && d.createdAt is timestamp
+        && d.updatedAt is timestamp;
+    }
+
+    function isValidGroupMember(d) {
+      return d.keys().hasAll([
+          'uid',
+          'groupId',
+          'displayName',
+          'role',
+          'xp',
+          'completedCount',
+          'streakDays',
+          'lastChapterId',
+          'joinedAt',
+          'updatedAt'
+        ])
+        && d.keys().hasOnly([
+          'uid',
+          'groupId',
+          'displayName',
+          'role',
+          'xp',
+          'completedCount',
+          'streakDays',
+          'lastChapterId',
+          'joinedAt',
+          'updatedAt'
+        ])
+        && isValidId(d.uid)
+        && isValidGroupId(d.groupId)
+        && d.displayName is string && d.displayName.size() >= 1 && d.displayName.size() <= 60
+        && d.role is string && d.role in ['owner', 'member']
+        && d.xp is number && d.xp >= 0 && d.xp <= 1000000
+        && d.completedCount is number && d.completedCount >= 0 && d.completedCount <= 120
+        && d.streakDays is number && d.streakDays >= 0 && d.streakDays <= 3650
+        && isValidChapterId(d.lastChapterId)
+        && d.joinedAt is timestamp
+        && d.updatedAt is timestamp;
+    }
+
+    function isValidGroupNote(d) {
+      return d.keys().hasAll([
+          'id',
+          'groupId',
+          'chapterId',
+          'authorUid',
+          'authorName',
+          'body',
+          'createdAt'
+        ])
+        && d.keys().hasOnly([
+          'id',
+          'groupId',
+          'chapterId',
+          'authorUid',
+          'authorName',
+          'body',
+          'createdAt'
+        ])
+        && isValidId(d.id)
+        && isValidGroupId(d.groupId)
+        && isValidChapterId(d.chapterId)
+        && isValidId(d.authorUid)
+        && d.authorName is string && d.authorName.size() >= 1 && d.authorName.size() <= 60
+        && d.body is string && d.body.size() >= 1 && d.body.size() <= 800
+        && d.createdAt is timestamp;
+    }
+
+    // -------------------------------------------------------------------------
+    // /users/{userId} — Strictly Private Owner-Only Profile
+    // -------------------------------------------------------------------------
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow list: if false;
+
+      allow create: if isVerified()
+        && isOwner(userId)
+        && isValidId(userId)
+        && isValidUserProfile(incoming())
+        && incoming().uid == request.auth.uid
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+
+      allow update: if isVerified()
+        && isOwner(userId)
+        && isValidId(userId)
+        && isValidUserProfile(incoming())
+        && incoming().uid == existing().uid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly([
+          'displayName',
+          'completedIds',
+          'bookmarkedIds',
+          'xp',
+          'streakDays',
+          'lastActiveDate',
+          'focusMinutes',
+          'activeGroupId',
+          'lastReadId',
+          'theme',
+          'fontScale',
+          'activePathId',
+          'adhdMode',
+          'checkOutcomes',
+          'notes',
+          'updatedAt'
+        ]);
+
+      allow delete: if isVerified() && isOwner(userId) && isValidId(userId);
+    }
+
+    // -------------------------------------------------------------------------
+    // /studyGroups/{groupId} — Collaborative Study Circles (Invite-Code Gated)
+    // -------------------------------------------------------------------------
+    match /studyGroups/{groupId} {
+      // Knowing the invite code lets a signed-in friend look up the circle to join
+      allow get: if isSignedIn() && isValidGroupId(groupId);
+      // Listing strictly scoped to circles the user belongs to (no collection scraping)
+      allow list: if isSignedIn() && request.auth.uid in existing().memberUids;
+
+      allow create: if isVerified()
+        && isValidGroupId(groupId)
+        && isValidStudyGroup(incoming())
+        && incoming().id == groupId
+        && incoming().ownerId == request.auth.uid
+        && incoming().memberUids.size() == 1
+        && incoming().memberUids[0] == request.auth.uid
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+
+      allow update: if isVerified()
+        && isValidGroupId(groupId)
+        && isValidStudyGroup(incoming())
+        && incoming().id == existing().id
+        && incoming().ownerId == existing().ownerId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          // Action 1: Owner updates group settings
+          (
+            existing().ownerId == request.auth.uid
+            && incoming().diff(existing()).affectedKeys().hasOnly([
+              'name',
+              'description',
+              'weeklyGoalChapters',
+              'updatedAt'
+            ])
+          )
+          ||
+          // Action 2: Verified user joins via invite code (appends only self, max 25)
+          (
+            !(request.auth.uid in existing().memberUids)
+            && incoming().diff(existing()).affectedKeys().hasOnly([
+              'memberUids',
+              'updatedAt'
+            ])
+            && incoming().memberUids.hasAll(existing().memberUids)
+            && incoming().memberUids.size() == existing().memberUids.size() + 1
+            && request.auth.uid in incoming().memberUids
+          )
+          ||
+          // Action 3: Non-owner member leaves the circle (removes only self)
+          (
+            (request.auth.uid in existing().memberUids)
+            && existing().ownerId != request.auth.uid
+            && incoming().diff(existing()).affectedKeys().hasOnly([
+              'memberUids',
+              'updatedAt'
+            ])
+            && existing().memberUids.hasAll(incoming().memberUids)
+            && incoming().memberUids.size() == existing().memberUids.size() - 1
+            && !(request.auth.uid in incoming().memberUids)
+          )
+        );
+
+      allow delete: if isVerified()
+        && isValidGroupId(groupId)
+        && existing().ownerId == request.auth.uid;
+
+      // -----------------------------------------------------------------------
+      // /studyGroups/{groupId}/members/{memberId} — Live Leaderboard Cards
+      // -----------------------------------------------------------------------
+      match /members/{memberId} {
+        allow get: if isValidGroupId(groupId)
+          && isValidId(memberId)
+          && isGroupMember(groupId);
+
+        allow list: if isValidGroupId(groupId)
+          && isGroupMember(groupId);
+
+        allow create: if isVerified()
+          && isValidGroupId(groupId)
+          && isValidId(memberId)
+          && memberId == request.auth.uid
+          && isGroupMember(groupId)
+          && isValidGroupMember(incoming())
+          && incoming().uid == request.auth.uid
+          && incoming().groupId == groupId
+          && incoming().joinedAt == request.time
+          && incoming().updatedAt == request.time
+          && (
+            (incoming().role == 'owner' && getGroup(groupId).ownerId == request.auth.uid)
+            || incoming().role == 'member'
+          );
+
+        allow update: if isVerified()
+          && isValidGroupId(groupId)
+          && isValidId(memberId)
+          && memberId == request.auth.uid
+          && isGroupMember(groupId)
+          && isValidGroupMember(incoming())
+          && incoming().uid == existing().uid
+          && incoming().groupId == existing().groupId
+          && incoming().role == existing().role
+          && incoming().joinedAt == existing().joinedAt
+          && incoming().updatedAt == request.time
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'displayName',
+            'xp',
+            'completedCount',
+            'streakDays',
+            'lastChapterId',
+            'updatedAt'
+          ]);
+
+        allow delete: if isVerified()
+          && isValidGroupId(groupId)
+          && isValidId(memberId)
+          && (
+            memberId == request.auth.uid
+            || (groupExists(groupId) && getGroup(groupId).ownerId == request.auth.uid)
+          );
+      }
+
+      // -----------------------------------------------------------------------
+      // /studyGroups/{groupId}/notes/{noteId} — Shared Chapter Discussions
+      // -----------------------------------------------------------------------
+      match /notes/{noteId} {
+        allow get: if isValidGroupId(groupId)
+          && isValidId(noteId)
+          && isGroupMember(groupId);
+
+        allow list: if isValidGroupId(groupId)
+          && isGroupMember(groupId);
+
+        allow create: if isVerified()
+          && isValidGroupId(groupId)
+          && isValidId(noteId)
+          && isGroupMember(groupId)
+          && isValidGroupNote(incoming())
+          && incoming().id == noteId
+          && incoming().groupId == groupId
+          && incoming().authorUid == request.auth.uid
+          && incoming().createdAt == request.time;
+
+        allow update: if false;
+
+        allow delete: if isVerified()
+          && isValidGroupId(groupId)
+          && isValidId(noteId)
+          && isGroupMember(groupId)
+          && (
+            existing().authorUid == request.auth.uid
+            || getGroup(groupId).ownerId == request.auth.uid
+          );
+      }
+    }
+  }
+}

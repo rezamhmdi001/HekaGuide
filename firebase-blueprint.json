@@ -1,0 +1,295 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Private user profile, synced learning progress, gamification XP/streak, and personal notes for an authenticated reader.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "completedIds": {
+          "type": "array",
+          "description": "Completed chapter IDs (max 120)."
+        },
+        "bookmarkedIds": {
+          "type": "array",
+          "description": "Bookmarked chapter IDs (max 120)."
+        },
+        "xp": {
+          "type": "number",
+          "description": "Total earned experience points."
+        },
+        "streakDays": {
+          "type": "number",
+          "description": "Current consecutive study days."
+        },
+        "lastActiveDate": {
+          "type": "string",
+          "maxLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "focusMinutes": {
+          "type": "number",
+          "description": "Total completed Pomodoro focus sprint minutes."
+        },
+        "activeGroupId": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "lastReadId": {
+          "type": "string",
+          "minLength": 7,
+          "maxLength": 16,
+          "pattern": "^T[0-9]{2}-C[0-9]{2}$"
+        },
+        "theme": {
+          "type": "string",
+          "enum": ["paper", "sepia", "dark"]
+        },
+        "fontScale": {
+          "type": "number"
+        },
+        "activePathId": {
+          "type": "string",
+          "enum": ["architect", "fullstack", "devops", "ai"]
+        },
+        "adhdMode": {
+          "type": "boolean"
+        },
+        "checkOutcomes": {
+          "type": "object",
+          "description": "Map of chapterId to check outcome (passed, review, failed)."
+        },
+        "notes": {
+          "type": "object",
+          "description": "Map of chapterId to personal field note string."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "displayName",
+        "completedIds",
+        "bookmarkedIds",
+        "xp",
+        "streakDays",
+        "lastActiveDate",
+        "focusMinutes",
+        "activeGroupId",
+        "lastReadId",
+        "theme",
+        "fontScale",
+        "activePathId",
+        "adhdMode",
+        "checkOutcomes",
+        "notes",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "StudyGroup": {
+      "title": "StudyGroup",
+      "description": "A collaborative friend study circle identified by a shareable invite code.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 60
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 240
+        },
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "weeklyGoalChapters": {
+          "type": "number"
+        },
+        "memberUids": {
+          "type": "array",
+          "description": "Bounded list of member UIDs (max 25 friends per study circle)."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "ownerId",
+        "weeklyGoalChapters",
+        "memberUids",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "GroupMember": {
+      "title": "GroupMember",
+      "description": "Non-PII public progress card of a member inside a StudyGroup for the live leaderboard.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "groupId": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "role": {
+          "type": "string",
+          "enum": ["owner", "member"]
+        },
+        "xp": {
+          "type": "number"
+        },
+        "completedCount": {
+          "type": "number"
+        },
+        "streakDays": {
+          "type": "number"
+        },
+        "lastChapterId": {
+          "type": "string",
+          "minLength": 7,
+          "maxLength": 16,
+          "pattern": "^T[0-9]{2}-C[0-9]{2}$"
+        },
+        "joinedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "groupId",
+        "displayName",
+        "role",
+        "xp",
+        "completedCount",
+        "streakDays",
+        "lastChapterId",
+        "joinedAt",
+        "updatedAt"
+      ]
+    },
+    "GroupNote": {
+      "title": "GroupNote",
+      "description": "Shared chapter discussion note or insight posted by a study group member.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "groupId": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "chapterId": {
+          "type": "string",
+          "minLength": 7,
+          "maxLength": 16,
+          "pattern": "^T[0-9]{2}-C[0-9]{2}$"
+        },
+        "authorUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "authorName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 800
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "groupId",
+        "chapterId",
+        "authorUid",
+        "authorName",
+        "body",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private user profile and synced progress (strict owner-only access)."
+    },
+    "/studyGroups/{groupId}": {
+      "schema": { "$ref": "#/entities/StudyGroup" },
+      "description": "Collaborative friend study circle keyed by invite code."
+    },
+    "/studyGroups/{groupId}/members/{memberId}": {
+      "schema": { "$ref": "#/entities/GroupMember" },
+      "description": "Public leaderboard progress entries for members of a study circle."
+    },
+    "/studyGroups/{groupId}/notes/{noteId}": {
+      "schema": { "$ref": "#/entities/GroupNote" },
+      "description": "Shared chapter notes and questions posted inside a study circle."
+    }
+  }
+}
